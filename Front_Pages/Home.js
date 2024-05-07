@@ -41,7 +41,7 @@ const Home = () => {
                 <View 
                 style={{alignItems: 'center', backgroundColor: `rgba(150,120,150,0.3)`, width: '90%', alignSelf: 'center', borderRadius: 20, marginTop: 20, padding: 20, flexDirection: 'column', gap: 20}}
                 key={index}>
-                    <Text>status: {item.status}</Text>
+                    <Text>status: {item.sign}</Text>
                     <Text>sented: {item.when}</Text>
                 </View>
               ))

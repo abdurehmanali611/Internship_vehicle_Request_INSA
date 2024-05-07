@@ -13,13 +13,14 @@ import ManagerLogin from './Manager_Pages/ManagerLogin'
 import ManagerMain from './Manager_Pages/ManagerMain'
 import TransportLogin from './Transport/TransportLogin'
 import TransportMain from './Transport/TransportMain'
+import Assigning_car from './Front_Pages/Assigning_car'
 
 const navigation = createStackNavigator()
 
 const App = () => {
   return (
-    <NavigationContainer >
-      <navigation.Navigator initialRouteName='AdminMain'>
+    <NavigationContainer>
+      <navigation.Navigator initialRouteName='Assigning_car'>
         <navigation.Screen name="Home" component={Home} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name="Intro" component={Intro} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name="UserLogin" component={UserLogin} options={{title: 'Vehicle Tracker'}}/>
@@ -30,6 +31,7 @@ const App = () => {
         <navigation.Screen name='ManagerMain' component={ManagerMain} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name='transportLogin' component={TransportLogin} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name='transportMain' component={TransportMain} options={{title: 'Vehicle Tracker'}}/>
+        <navigation.Screen name='Assigning_car' component={Assigning_car} options={{title: 'Vehicle Tracker'}}/>
         </navigation.Navigator>
     </NavigationContainer>
   )
