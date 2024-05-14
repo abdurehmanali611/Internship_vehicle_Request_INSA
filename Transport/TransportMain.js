@@ -25,18 +25,17 @@ const TransportMain = ({navigation}) => {
   useEffect(() => {
     receivedRequest()
    
-  }, []) // Empty dependency array to run effect only once
+  }, []) 
 
   const accepted = async () => {
-    if (keys.length === 0) return; // Ensure there's at least one request
+    if (keys.length === 0) return; 
     const docToUpdate = doc(database, 'Requests', keys[keys.length - 1])
     await updateDoc(docToUpdate, { sign: 'Accepted' })
     alert('Your acceptance was sent successfully')
-    navigation.navigate('Assigning_car')
   }
 
   const rejected = async () => {
-    if (keys.length === 0) return; // Ensure there's at least one request
+    if (keys.length === 0) return; 
     const docToUpdate = doc(database, 'Requests', keys[keys.length - 1])
     await updateDoc(docToUpdate, { 
       sign: 'Rejected',
@@ -47,7 +46,7 @@ const TransportMain = ({navigation}) => {
 
   return (
     <ScrollView>
-      <View style={{ flexDirection: 'column', gap: 30 }}>
+      <View style={{ flexDirection: 'column-reverse', gap: 30 }}>
         {infos.map((item, index) => (
           <View
             style={{
