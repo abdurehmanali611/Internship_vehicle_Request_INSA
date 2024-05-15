@@ -13,7 +13,7 @@ import ManagerLogin from './Manager_Pages/ManagerLogin'
 import ManagerMain from './Manager_Pages/ManagerMain'
 import TransportLogin from './Transport/TransportLogin'
 import TransportMain from './Transport/TransportMain'
-import Assigning_car from './Front_Pages/Assigning_car'
+import Assign_Car from './Front_Pages/Assign_Car'
 
 const navigation = createStackNavigator()
 
@@ -31,7 +31,7 @@ const App = () => {
         <navigation.Screen name='ManagerMain' component={ManagerMain} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name='transportLogin' component={TransportLogin} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name='transportMain' component={TransportMain} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='Assigning_car' component={Assigning_car} options={{title: 'Vehicle Tracker'}}/>
+        <navigation.Screen name='Assign' component={Assign_Car} options={{title: 'Vehicle Tracker'}}/>
         </navigation.Navigator>
     </NavigationContainer>
   )

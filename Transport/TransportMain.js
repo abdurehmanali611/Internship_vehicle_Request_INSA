@@ -32,6 +32,7 @@ const TransportMain = ({navigation}) => {
     const docToUpdate = doc(database, 'Requests', keys[keys.length - 1])
     await updateDoc(docToUpdate, { sign: 'Accepted' })
     alert('Your acceptance was sent successfully')
+    navigation.navigate('Assign')
   }
 
   const rejected = async () => {
@@ -48,6 +49,7 @@ const TransportMain = ({navigation}) => {
     <ScrollView>
       <View style={{ flexDirection: 'column-reverse', gap: 30 }}>
         {infos.map((item, index) => (
+          <View key={index}>
           <View
             style={{
               alignItems: 'center',
@@ -60,26 +62,26 @@ const TransportMain = ({navigation}) => {
               marginTop: 20,
               padding: 20
             }}
-            key={index}
           >
             <Text>Name: {item.name}</Text>
             <Text>Responsibility: {item.responsibility}</Text>
             <Text>Reason: {item.reason}</Text>
             <Text>From When: {item.startDate}</Text>
             <Text>To When: {item.endDate}</Text>
-            <Text>Admin Response: {item.status}</Text>
+            <Text>Admin's Approve: {item.status}</Text>
+            <Text>your Approve: {item.sign}</Text>
             <Text style={{ alignSelf: 'flex-start', marginVertical: 10, fontSize: 12 }}>Sent: {item.when}</Text>
           </View>
-        ))}
-      </View>
-      <View style={{ flexDirection: 'row-reverse', marginHorizontal: 20, marginVertical: 20, justifyContent: 'space-between' }}>
+          <View style={{ flexDirection: 'row-reverse', marginHorizontal: 20, marginVertical: 20, justifyContent: 'space-between' }}>
         <TouchableOpacity
+          disabled = {infos.length == 0}
           onPress={accepted}
           style={{ backgroundColor: `rgba(120, 200,150, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}
         >
           <Text>Accept</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          disabled = {infos.length == 0}
           onPress={() => setReasonHas(!reasonHas)}
           style={{ backgroundColor: `rgba(200, 120,120, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}
         >
@@ -105,6 +107,10 @@ const TransportMain = ({navigation}) => {
           </TouchableOpacity>
         </View>
       )}
+      </View>
+        ))}
+      </View>
+     
     </ScrollView>
   )
 }

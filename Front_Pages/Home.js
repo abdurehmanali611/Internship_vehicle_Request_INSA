@@ -23,13 +23,6 @@ const Home = () => {
 
   useEffect(() => {
     receivedFile()
-    const interval = setInterval(() => {
-      
-    }, 60000);
-
-    return () => {
-      clearInterval(interval)
-    }
   })
 
   return (
@@ -42,7 +35,7 @@ const Home = () => {
                 style={{alignItems: 'center', backgroundColor: `rgba(150,120,150,0.3)`, width: '90%', alignSelf: 'center', borderRadius: 20, marginTop: 20, padding: 20, flexDirection: 'column', gap: 20}}
                 key={index}>
                     <Text>status: {item.sign}</Text>
-                    <Text>sented: {item.when}</Text>
+                    <Text>{item.plate}</Text>
                 </View>
               ))
             )}

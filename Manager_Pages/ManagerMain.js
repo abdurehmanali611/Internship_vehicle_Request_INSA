@@ -11,6 +11,7 @@ const ManagerMain = () => {
   const [driverName, setDriverName] = useState()
   const [company, setCompany] = useState()
   const [plateNumber, setPlateNumber] = useState()
+  const [isAssigned, setIsAssigned] = useState(false)
 
   const submitted = () => {
       carName == '' || driverName == '' || company == '' || plateNumber == ''  ? 
@@ -19,7 +20,8 @@ const ManagerMain = () => {
         carName: carName, 
         DriverName: driverName, 
         companyName: company, 
-        PlateNumber: plateNumber
+        PlateNumber: plateNumber,
+        isAssigned: isAssigned
       })
       .then((res) => 
       alert('You have successfully added a new car to your collection', res.id))
