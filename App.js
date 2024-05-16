@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native'
 
 import React from 'react'
 import Intro from './Front_Pages/Intro'
-import Home from './Front_Pages/Home'
 import UserLogin from './User_Pages/UserLogin'
 import UserMain from './User_Pages/UserMain'
 import AdminLogin from './Admin_Pages/AdminLogin'
@@ -21,7 +20,6 @@ const App = () => {
   return (
     <NavigationContainer>
       <navigation.Navigator initialRouteName='Intro'>
-        <navigation.Screen name="Home" component={Home} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name="Intro" component={Intro} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name="UserLogin" component={UserLogin} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name='UserMain' component={UserMain} options={{title: 'Vehicle Tracker'}}/>

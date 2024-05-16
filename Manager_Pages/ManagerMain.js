@@ -2,6 +2,7 @@ import { TextInput, TouchableOpacity, View, Text } from 'react-native'
 import React, { useState } from 'react'
 import { database } from '../config/firebase'
 import { addDoc, collection } from 'firebase/firestore'
+import { ScrollView } from 'react-native'
 
 const ManagerMain = () => {
 
@@ -11,7 +12,7 @@ const ManagerMain = () => {
   const [driverName, setDriverName] = useState()
   const [company, setCompany] = useState()
   const [plateNumber, setPlateNumber] = useState()
-  const [isAssigned, setIsAssigned] = useState(false)
+  const [driverPhone, setDriverPhone] = useState()  
 
   const submitted = () => {
       carName == '' || driverName == '' || company == '' || plateNumber == ''  ? 
@@ -21,7 +22,8 @@ const ManagerMain = () => {
         DriverName: driverName, 
         companyName: company, 
         PlateNumber: plateNumber,
-        isAssigned: isAssigned
+        isAssigned: false,
+        DriverPhone: driverPhone
       })
       .then((res) => 
       alert('You have successfully added a new car to your collection', res.id))
@@ -29,7 +31,7 @@ const ManagerMain = () => {
   }
 
   return (
-    <View>
+    <ScrollView>
       <View style={{marginVertical: 20, flexDirection: 'column', gap: 25}}>
         <Text style={{textAlign: 'center', fontSize: 20}}>Car Name</Text>
         <TextInput 
@@ -45,6 +47,14 @@ const ManagerMain = () => {
         textContentType='givenName'
         value={driverName}
         onChangeText={(newDriver) => setDriverName(newDriver)}
+        style={{marginHorizontal: 20, backgroundColor: `rgba(120,120,112,0.5)`, height: 60, borderRadius: 30, paddingHorizontal: 15}}
+        />
+        <Text style={{textAlign: 'center', fontSize: 20}}>Driver Phone</Text>
+        <TextInput 
+        placeholder='Driver Phone'
+        textContentType='telephoneNumber'
+        value={driverPhone}
+        onChangeText={(newphone) => setDriverPhone(newphone)}
         style={{marginHorizontal: 20, backgroundColor: `rgba(120,120,112,0.5)`, height: 60, borderRadius: 30, paddingHorizontal: 15}}
         />
         <Text style={{textAlign: 'center', fontSize: 20}}>Company Name</Text>
@@ -72,7 +82,7 @@ const ManagerMain = () => {
           <Text>Submit</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 

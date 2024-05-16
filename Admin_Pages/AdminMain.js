@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-nativ
 import React, { useEffect, useState } from 'react'
 import { database } from '../config/firebase'
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore'
+import { CheckBox } from 'react-native-elements'
 
 const AdminMain = () => {
   const [infos, setInfos] = useState([])
@@ -23,25 +24,7 @@ const AdminMain = () => {
 
   useEffect(() => {
     receivedRequest()
-    
-  }, []) // Empty dependency array to run effect only once
-
-  const accepted = async () => {
-    if (keys.length === 0) return; // Ensure there's at least one request
-    const docToUpdate = doc(database, 'Requests', keys[keys.length - 1])
-    await updateDoc(docToUpdate, { status: 'Accepted' })
-    alert('Your acceptance was sent successfully')
-  }
-
-  const rejected = async () => {
-    if (keys.length === 0) return; // Ensure there's at least one request
-    const docToUpdate = doc(database, 'Requests', keys[keys.length - 1])
-    await updateDoc(docToUpdate, { 
-      status: 'Rejected',
-      info: { reason}
-     })
-    alert('Your rejection was sent successfully')
-  }
+  }, []) 
 
   return (
     <ScrollView>
@@ -66,19 +49,21 @@ const AdminMain = () => {
             <Text>Reason: {item.reason}</Text>
             <Text>From When: {item.startDate}</Text>
             <Text>To When: {item.endDate}</Text>
-            <Text>Your Approve: {item.status}</Text>
             <Text style={{ alignSelf: 'flex-start', marginVertical: 10, fontSize: 12 }}>Sent: {item.when}</Text>
           </View>
           <View style={{ flexDirection: 'row-reverse', marginHorizontal: 20, marginVertical: 20, justifyContent: 'space-between' }}>
           <TouchableOpacity
-            disabled = {infos.length == 0}
-            onPress={accepted}
+            onPress={async () => {
+              if (keys.length === 0) return; // Ensure there's at least one request
+              const docToUpdate = doc(database, 'Requests', keys[index])
+              await updateDoc(docToUpdate, { status: 'Accepted' })
+              alert('Your acceptance was sent successfully')
+            }}
             style={{ backgroundColor: `rgba(120, 200,150, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}
           >
             <Text>Accept</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            disabled = {infos.length == 0}
             onPress={() => setReasonHas(!reasonHas)}
             style={{ backgroundColor: `rgba(200, 120,120, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}
           >
@@ -97,7 +82,15 @@ const AdminMain = () => {
               style={{ backgroundColor: `rgba(120,130,120,0.5)`, width: '70%', borderRadius: 30, height: 100, paddingHorizontal: 10 }}
             />
             <TouchableOpacity
-              onPress={rejected}
+              onPress={async () => {
+                if (keys.length === 0) return; // Ensure there's at least one request
+                const docToUpdate = doc(database, 'Requests', keys[index])
+                await updateDoc(docToUpdate, { 
+                  status: 'Rejected',
+                  info: { reason}
+                 })
+                alert('Your rejection was sent successfully')
+              }}
               style={{ backgroundColor: `rgba(150,120,120,0.5)`, alignSelf: 'flex-end', marginHorizontal: 20, width: 150, borderRadius: 20, height: 50, alignItems: 'center', justifyContent: 'center' }}
             >
               <Text>Submit</Text>

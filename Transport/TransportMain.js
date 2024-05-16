@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-nativ
 import React, { useEffect, useState } from 'react'
 import { database } from '../config/firebase'
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore'
+import { CheckBox } from 'react-native-elements'
+import * as SMS from 'expo-sms'
 
 const TransportMain = ({navigation}) => {
 
@@ -9,6 +11,7 @@ const TransportMain = ({navigation}) => {
   const [keys, setKeys] = useState([])
   const [reasonHas, setReasonHas] = useState(false)
   const [reason, setReason] = useState('')
+  const [isAvailable, setIsAvailable] = useState(false)
 
   const collectionRef = collection(database, 'Requests')
 
@@ -20,30 +23,22 @@ const TransportMain = ({navigation}) => {
     }))
     setInfos(data)
     setKeys(data.map(item => item.id))
+    console.log(infos.map(item => {return item.Phone}));
   }
 
   useEffect(() => {
     receivedRequest()
-   
   }, []) 
 
-  const accepted = async () => {
-    if (keys.length === 0) return; 
-    const docToUpdate = doc(database, 'Requests', keys[keys.length - 1])
-    await updateDoc(docToUpdate, { sign: 'Accepted' })
-    alert('Your acceptance was sent successfully')
-    navigation.navigate('Assign')
+  const Rejected = async () => {
+
+    setReasonHas(!reasonHas)
+   const isSMSAvailable =  await SMS.isAvailableAsync()
+   setIsAvailable(isSMSAvailable)
+
   }
 
-  const rejected = async () => {
-    if (keys.length === 0) return; 
-    const docToUpdate = doc(database, 'Requests', keys[keys.length - 1])
-    await updateDoc(docToUpdate, { 
-      sign: 'Rejected',
-      why: {reason}
-     })
-    alert('Your rejection was sent successfully')
-  }
+  // sending to email the info functionality for next
 
   return (
     <ScrollView>
@@ -68,21 +63,25 @@ const TransportMain = ({navigation}) => {
             <Text>Reason: {item.reason}</Text>
             <Text>From When: {item.startDate}</Text>
             <Text>To When: {item.endDate}</Text>
-            <Text>Admin's Approve: {item.status}</Text>
-            <Text>your Approve: {item.sign}</Text>
             <Text style={{ alignSelf: 'flex-start', marginVertical: 10, fontSize: 12 }}>Sent: {item.when}</Text>
           </View>
           <View style={{ flexDirection: 'row-reverse', marginHorizontal: 20, marginVertical: 20, justifyContent: 'space-between' }}>
         <TouchableOpacity
-          disabled = {infos.length == 0}
-          onPress={accepted}
+          onPress={async () => {
+            if (keys.length === 0) return; 
+            const docToUpdate = doc(database, 'Requests', keys[index])
+            await updateDoc(docToUpdate, { sign: 'Accepted' })
+            alert('Your acceptance was sent successfully')
+            navigation.navigate('Assign', {
+              key: keys[index]
+            })
+          }}
           style={{ backgroundColor: `rgba(120, 200,150, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}
         >
           <Text>Accept</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          disabled = {infos.length == 0}
-          onPress={() => setReasonHas(!reasonHas)}
+          onPress={Rejected}
           style={{ backgroundColor: `rgba(200, 120,120, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}
         >
           <Text>Decline</Text>
@@ -99,8 +98,21 @@ const TransportMain = ({navigation}) => {
             multiline
             style={{ backgroundColor: `rgba(120,130,120,0.5)`, width: '70%', borderRadius: 30, height: 100, paddingHorizontal: 10 }}
           />
+          {isAvailable ? <Text>To {item.Phone}</Text>: <Text>Email Not Available</Text>}
           <TouchableOpacity
-            onPress={rejected}
+            onPress={async () => {
+              if (keys.length === 0) return; 
+              const docToUpdate = doc(database, 'Requests', keys[index])
+              await updateDoc(docToUpdate, { 
+                sign: 'Rejected',
+                why: {reason}
+               })
+               SMS.sendSMSAsync (
+                [item.Phone],
+                `Your request was rejected because of ${reason}`
+               )
+              alert('Your rejection was sent successfully')
+            }}
             style={{ backgroundColor: `rgba(150,120,120,0.5)`, alignSelf: 'flex-end', marginHorizontal: 20, width: 150, borderRadius: 20, height: 50, alignItems: 'center', justifyContent: 'center' }}
           >
             <Text>Submit</Text>

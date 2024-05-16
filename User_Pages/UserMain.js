@@ -13,6 +13,7 @@ const UserMain = ({navigation}) => {
   const [reason, setReason] = useState('')
   const [fromseeCalender, setFromSeeCalender] = useState(false)
   const [toseeCalender, setToSeeCalender] = useState(false)
+  const [phone, setPhone] = useState('')
 
   const date = new Date()
 
@@ -20,6 +21,7 @@ const UserMain = ({navigation}) => {
 
   const requestinfo = {
     name: name,
+    Phone: phone,
     responsibility: responsibility,
     startDate: startDate,
     endDate: endDate,
@@ -27,25 +29,20 @@ const UserMain = ({navigation}) => {
     when: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} - ${date.getHours()}: ${date.getMinutes()}`
   }
 
-  const sendRequest = async () => {
+  const sendRequest = async () => { 
 
-    if(name.length == 0 || responsibility.length == 0 || startDate.length == 0 || endDate.length == 0 || reason.length == 0){
+    if(name.length == 0 || responsibility.length == 0 || phone.length == 0 || startDate.length == 0 || endDate.length == 0 || reason.length == 0){
       alert('Please fill all the fields')
     }else {
        await addDoc(collectionRef, requestinfo)
        .catch(err => console.log(err))
-       alert('successfully sent')
+       alert('successfully sent look after your Email')
     }
     
   }
 
   return (
     <ScrollView showsVerticalScrollIndicator = {false}>
-      <TouchableOpacity 
-      onPress={() => navigation.navigate('Home')}
-      style = {styles.header}>
-       <Text>See Approval</Text>
-      </TouchableOpacity>
       <View style= {styles.questionfamily}>
         <Text style = {styles.questiontxt}>Full Name: </Text>
         <TextInput 
@@ -54,6 +51,16 @@ const UserMain = ({navigation}) => {
         textContentType='givenName'
         value={name}
         onChangeText={(newname) => setName(newname)}
+        />
+      </View>
+      <View style= {styles.questionfamily}>
+        <Text style = {styles.questiontxt}>Phone Number: </Text>
+        <TextInput 
+        style = {styles.questioninput}
+        placeholder='Phone Number'
+        textContentType='telephoneNumber'
+        value={phone}
+        onChangeText={(newphone) => setPhone(newphone)}
         />
       </View>
       <View style= {styles.questionfamily}>
