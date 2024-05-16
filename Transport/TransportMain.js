@@ -42,9 +42,14 @@ const TransportMain = ({navigation}) => {
 
   return (
     <ScrollView>
-      <View style={{ flexDirection: 'column-reverse', gap: 30 }}>
+      <View style={{ flexDirection: 'column', gap: 40 }}>
         {infos.map((item, index) => (
           <View key={index}>
+            <Text 
+            style={{ marginHorizontal: '26%', zIndex: 20, position: 'absolute', backgroundColor: `rgba(120,151,150,1)`, width: 200, height: 40, borderRadius: 30, textAlign: 'center', textAlignVertical: 'center'}}
+            >
+              Status: {item.sign}
+            </Text>
           <View
             style={{
               alignItems: 'center',

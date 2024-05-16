@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore'
 import { database } from '../config/firebase'
@@ -14,7 +14,8 @@ const Assign_Car = () => {
 
     const [datas, setDatas] = useState([])
     const [keys, setKeys] = useState([])
-    const [tosendEmail, setTosendEmail] = useState([])
+    const [carKey, setCarKey] = useState([])
+    const [tosendEmail, setTosendEmail] = useState({})
     const [smsAvailable, setSmsAvailable] = useState(false)
     const [requestorPhone, setRequestorPhone] = useState('')
 
@@ -28,6 +29,7 @@ const Assign_Car = () => {
             ...doc.data()
         }))
         setDatas(data)
+        setCarKey(data.map(car => car.id))
         console.log(datas);
 
         const response2 = await getDocs(collectionRef)
@@ -36,13 +38,10 @@ const Assign_Car = () => {
            ...doc.data()
         }))
 
-        // sending email to requester for tommorow
-        setTosendEmail(data2)
+        setTosendEmail(data2.find(item => item.id == Assign_key))
         setKeys(data2.map(item => item.id))
         console.log(keys);
-        tosendEmail.map (item => {
-            setRequestorPhone(item.Phone)
-        })
+        setRequestorPhone(tosendEmail.Phone)
         console.log(requestorPhone);
     }
 
@@ -55,9 +54,9 @@ const Assign_Car = () => {
 
         ispossible()
     }, [])
-    
+
   return (
-    <View>
+    <ScrollView showsVerticalScrollIndicator = {false}>
         {datas.length == 0 ? (
             <Text>No car please wait</Text>
         ):(
@@ -87,6 +86,7 @@ const Assign_Car = () => {
                         <Text style={{fontWeight: '600'}}>Company Name</Text>
                         <Text style={{marginTop: 5, flexWrap: 'wrap'}}>{item.companyName}</Text>
                     </View>
+                    <View style={{flexDirection: 'row-reverse', gap: 20, marginVertical: 20}}>
                     <TouchableOpacity
                     onPress={async () => {
                         const uptoDate = doc(database, 'Requests', Assign_key)
@@ -96,19 +96,33 @@ const Assign_Car = () => {
                         })
                         await SMS.sendSMSAsync(
                             [item.DriverPhone, requestorPhone],
-                            `${item.DriverName} will serve ${tosendEmail.map(email => {return email.name})} the ${tosendEmail.map(email => {return email.responsibility})}`
+                            `${item.DriverName} will serve ${tosendEmail.name} the ${tosendEmail.responsibility} from ${tosendEmail.startDate} to ${tosendEmail.endDate}`
                         )
-                
+                        
                         .catch((err) => alert(`update Error: ${err.message}`))
                     }} 
-                    style={{marginHorizontal: 180, backgroundColor: `rgba(120,160,130,0.4)`, width: 150, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30}}>
+                    style={{backgroundColor: `rgba(120,160,130,0.4)`, width: 150, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30}}>
                         <Text>Allow</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={async () => {
+                        const uptoDate = doc(database, 'Car Informations', carKey[index])
+                        updateDoc(uptoDate, {
+                            isAssigned: true
+                        })
+                        .then(() => alert('Successfully updated the database information'))
+                        .catch((err) => alert(`update Error: ${err.message}`))
+                    }} 
+
+                    style={{backgroundColor: `rgba(120,160,130,0.4)`, width: 150, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 30}}>
+                        <Text>Confirm</Text>
+                    </TouchableOpacity>
+                    </View>
                 </View>
             </View>
             ))
         )}
-    </View>
+    </ScrollView>
   )
 }
 

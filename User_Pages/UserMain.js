@@ -4,7 +4,7 @@ import { Calendar } from 'react-native-calendars'
 import { database } from '../config/firebase'
 import { addDoc, collection } from 'firebase/firestore'
 
-const UserMain = ({navigation}) => {
+const UserMain = () => {
 
   const [name, setName] = useState('')
   const [responsibility, setResponsibility] = useState('')
@@ -36,7 +36,7 @@ const UserMain = ({navigation}) => {
     }else {
        await addDoc(collectionRef, requestinfo)
        .catch(err => console.log(err))
-       alert('successfully sent look after your Email')
+       alert('successfully sent look after your SMS')
     }
     
   }
