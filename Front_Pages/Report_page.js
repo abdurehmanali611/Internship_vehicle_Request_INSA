@@ -3,14 +3,17 @@ import React, {useEffect, useState} from 'react'
 import { collection, getDocs } from 'firebase/firestore'
 import { database } from '../config/firebase'
 import { ActivityIndicator } from 'react-native'
-import { ScrollView } from 'react-native'
 
 const Report_page = () => {
 
     const [infos, setinfos] = useState([])
     const [keys, setKeys] = useState([])
+    const [info2, setInfo2] = useState([])
+    const [key2, setKey2] = useState([])
     const [isLoading, setIsLoading] = useState(true)
+    
     const collectionRef = collection(database, 'Car Informations')
+    const collectionRef2 = collection(database, 'Requests')
 
     const gettingData = async () => {
         const response = await getDocs(collectionRef)
@@ -21,7 +24,15 @@ const Report_page = () => {
 
         setinfos(data)
         setKeys(data.map(item => item.id))
-        console.log(infos);
+
+        const response2 = await getDocs(collectionRef2)
+        const data2 = response2.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+          setInfo2(data2)
+          setKey2(data2.map(item => item.id))
+          
         setIsLoading(false)
     }
 

@@ -80,7 +80,8 @@ const TransportMain = ({navigation}) => {
             await updateDoc(docToUpdate, { sign: 'Accepted' })
             alert('Your acceptance was sent successfully')
             navigation.navigate('Assign', {
-              key: keys[index]
+              key: keys[index],
+              index: index
             })
           }}
           style={{ backgroundColor: `rgba(120, 200,150, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}

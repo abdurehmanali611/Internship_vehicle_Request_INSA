@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 
 const Intro = ({navigation}) => {
+
   return (
     <View style = {styles.overall}>
       <View style = {styles.header}>

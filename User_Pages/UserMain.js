@@ -13,7 +13,7 @@ const UserMain = () => {
   const [reason, setReason] = useState('')
   const [fromseeCalender, setFromSeeCalender] = useState(false)
   const [toseeCalender, setToSeeCalender] = useState(false)
-  const [phone, setPhone] = useState('')
+  const [email, setEmail] = useState('')
 
   const date = new Date()
 
@@ -21,7 +21,7 @@ const UserMain = () => {
 
   const requestinfo = {
     name: name,
-    Phone: phone,
+    Email: email,
     responsibility: responsibility,
     startDate: startDate,
     endDate: endDate,
@@ -31,12 +31,12 @@ const UserMain = () => {
 
   const sendRequest = async () => { 
 
-    if(name.length == 0 || responsibility.length == 0 || phone.length == 0 || startDate.length == 0 || endDate.length == 0 || reason.length == 0){
+    if(name.length == 0 || responsibility.length == 0 || email.length == 0 || email.includes('@') == false || startDate.length == 0 || endDate.length == 0 || reason.length == 0 ){
       alert('Please fill all the fields')
     }else {
        await addDoc(collectionRef, requestinfo)
        .catch(err => console.log(err))
-       alert('successfully sent look after your SMS')
+       alert('successfully sent look after your Email')
     }
     
   }
@@ -54,13 +54,13 @@ const UserMain = () => {
         />
       </View>
       <View style= {styles.questionfamily}>
-        <Text style = {styles.questiontxt}>Phone Number: </Text>
+        <Text style = {styles.questiontxt}>Email: </Text>
         <TextInput 
         style = {styles.questioninput}
-        placeholder='Phone Number'
-        textContentType='telephoneNumber'
-        value={phone}
-        onChangeText={(newphone) => setPhone(newphone)}
+        placeholder='Email Address'
+        textContentType='emailAddress'
+        value={email}
+        onChangeText={(newemail) => setEmail(newemail)}
         />
       </View>
       <View style= {styles.questionfamily}>

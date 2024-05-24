@@ -20,7 +20,7 @@ const navigation = createStackNavigator()
 const App = () => {
   return (
     <NavigationContainer>
-      <navigation.Navigator initialRouteName='Assign'>
+      <navigation.Navigator initialRouteName='Intro'>
         <navigation.Screen name="Intro" component={Intro} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name="UserLogin" component={UserLogin} options={{title: 'Vehicle Tracker'}}/>
         <navigation.Screen name='UserMain' component={UserMain} options={{title: 'Vehicle Tracker'}}/>
