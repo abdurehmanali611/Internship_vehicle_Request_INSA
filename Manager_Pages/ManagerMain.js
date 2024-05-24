@@ -1,10 +1,10 @@
-import { TextInput, TouchableOpacity, View, Text } from 'react-native'
+import { TextInput, TouchableOpacity, View, Text, Image } from 'react-native'
 import React, { useState } from 'react'
 import { database } from '../config/firebase'
 import { addDoc, collection } from 'firebase/firestore'
 import { ScrollView } from 'react-native'
 
-const ManagerMain = () => {
+const ManagerMain = ({navigation}) => {
 
   const collectionRef = collection(database, 'Car Informations')
 
@@ -32,6 +32,17 @@ const ManagerMain = () => {
 
   return (
     <ScrollView>
+        <TouchableOpacity
+        style={{alignSelf: 'flex-end', marginVertical: 20, marginHorizontal: 10, alignItems: 'center', backgroundColor: `rgba(120,110,110,0.5)`, padding: 10, borderRadius: 20}}
+        onPress={() => navigation.navigate('report')}
+        >
+        <Image 
+        source={require('../assets/report.jpg')}
+        style = {{width: 50, height: 50, borderRadius: 40}}
+        alt='report'
+        />
+        <Text style = {{fontSize: 18}}>Report</Text>
+        </TouchableOpacity>
       <View style={{marginVertical: 20, flexDirection: 'column', gap: 25}}>
         <Text style={{textAlign: 'center', fontSize: 20}}>Car Name</Text>
         <TextInput 

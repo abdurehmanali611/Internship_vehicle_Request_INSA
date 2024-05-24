@@ -2,12 +2,11 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-nativ
 import React, { useEffect, useState } from 'react'
 import { database } from '../config/firebase'
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore'
-import { CheckBox } from 'react-native-elements'
 
 const AdminMain = () => {
   const [infos, setInfos] = useState([])
   const [keys, setKeys] = useState([])
-  const [reasonHas, setReasonHas] = useState(false)
+  const [reasonHas, setReasonHas] = useState([])
   const [reason, setReason] = useState('')
 
   const collectionRef = collection(database, 'Requests')
@@ -20,6 +19,13 @@ const AdminMain = () => {
     }))
     setInfos(data)
     setKeys(data.map(item => item.id))
+    setReasonHas(new Array(data.length).fill(false))
+  }
+
+  const handleDeclinePress = (index) => {
+    const updatedReasonHas = [...reasonHas]
+    updatedReasonHas[index] = !updatedReasonHas[index]
+    setReasonHas(updatedReasonHas)
   }
 
   useEffect(() => {
@@ -69,13 +75,13 @@ const AdminMain = () => {
             <Text>Accept</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => setReasonHas(!reasonHas)}
+            onPress={() => handleDeclinePress(index)}
             style={{ backgroundColor: `rgba(200, 120,120, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}
           >
             <Text>Decline</Text>
           </TouchableOpacity>
         </View>
-        {reasonHas && (
+        {reasonHas[index] && (
           <View style={{ alignItems: 'center', flexDirection: 'column', gap: 20, marginVertical: 20 }}>
             <Text style={{ fontSize: 20 }}>Your Reason Please</Text>
             <TextInput
@@ -95,6 +101,7 @@ const AdminMain = () => {
                   info: { reason}
                  })
                 alert('Your rejection was sent successfully')
+                handleDeclinePress(index)
               }}
               style={{ backgroundColor: `rgba(150,120,120,0.5)`, alignSelf: 'flex-end', marginHorizontal: 20, width: 150, borderRadius: 20, height: 50, alignItems: 'center', justifyContent: 'center' }}
             >

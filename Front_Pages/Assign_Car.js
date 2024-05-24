@@ -63,7 +63,6 @@ const Assign_Car = () => {
             datas.map((item, index) => (
                 <View key={index}>
                         <Text style={{fontSize: 20, backgroundColor: `rgba(120,100,102,0.5)`, height: 80, textAlignVertical: 'center', textAlign: 'center', borderRadius: 30, marginHorizontal: 15}}>Car {index + 1} Informations</Text>
-                        {smsAvailable ? <Text style={{ backgroundColor: `rgba(120,102,130,0.3)`, width: 305, marginVertical: 20, textAlign: 'center', alignSelf: 'center', height: 90, paddingHorizontal: 10, textAlignVertical: 'center', borderRadius: 20}}>Send To driver and Requestor by one click </Text>: <Text>SMS not Available</Text>}
                 <View 
                 style = {{ flexDirection: 'row', gap: 15, marginVertical: 20, flexWrap: 'wrap', marginHorizontal: 20}} >
                     <View style={{backgroundColor: `rgba(102,102,120,0.3)`, width: 150, height: 100, alignItems: 'center', borderRadius: 20}}>
@@ -86,6 +85,7 @@ const Assign_Car = () => {
                         <Text style={{fontWeight: '600'}}>Company Name</Text>
                         <Text style={{marginTop: 5, flexWrap: 'wrap'}}>{item.companyName}</Text>
                     </View>
+                    <Text>{item.isAssigned ? 'Assigned': 'Free'}</Text>
                     <View style={{flexDirection: 'row-reverse', gap: 20, marginVertical: 20}}>
                     <TouchableOpacity
                     onPress={async () => {
