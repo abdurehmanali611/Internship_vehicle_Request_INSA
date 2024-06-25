@@ -21,17 +21,17 @@ const App = () => {
   return (
     <NavigationContainer>
       <navigation.Navigator initialRouteName='Intro'>
-        <navigation.Screen name="Intro" component={Intro} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name="UserLogin" component={UserLogin} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='UserMain' component={UserMain} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='AdminLogin' component={AdminLogin} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='AdminMain' component={AdminMain} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='ManagerLogin' component={ManagerLogin} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='ManagerMain' component={ManagerMain} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='transportLogin' component={TransportLogin} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='transportMain' component={TransportMain} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='Assign' component={Assign_Car} options={{title: 'Vehicle Tracker'}}/>
-        <navigation.Screen name='report' component={Report_page} options={{title: 'Vehicle Traker'}}/>
+        <navigation.Screen name="Intro" component={Intro} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name="UserLogin" component={UserLogin} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name='UserMain' component={UserMain} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name='AdminLogin' component={AdminLogin} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name='AdminMain' component={AdminMain} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name='ManagerLogin' component={ManagerLogin} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name='ManagerMain' component={ManagerMain} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name='transportLogin' component={TransportLogin} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name='transportMain' component={TransportMain} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name='Assign' component={Assign_Car} options={{title: 'Vehicle Requester'}}/>
+        <navigation.Screen name='report' component={Report_page} options={{title: 'Vehicle Requester'}}/>
         </navigation.Navigator>
     </NavigationContainer>
   )
