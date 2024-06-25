@@ -1,44 +1,167 @@
 import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { database } from '../config/firebase'
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore'
+import { ActivityIndicator } from 'react-native'
 
 const AdminMain = () => {
   const [infos, setInfos] = useState([])
-  const [keys, setKeys] = useState([])
   const [reasonHas, setReasonHas] = useState([])
   const [reason, setReason] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  // Make isLoading false when you finish fetching data from the API in receivedRequest() method
+  const [accepted, setAccepted] = useState(false)
+  const [declined, setDeclined] = useState(false)
+  // the above two state variables are for touchableOpacity ACCEPTED and REJECTED you can check it from line 49 to 68
 
-  const collectionRef = collection(database, 'Requests')
 
+  // The method below is for getting data from the API when app restarted
+  // Assign the values in infos i mean make them in setInfos
   const receivedRequest = async () => {
-    const response = await getDocs(collectionRef)
-    const data = response.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }))
-    setInfos(data)
-    setKeys(data.map(item => item.id))
-    setReasonHas(new Array(data.length).fill(false))
+    
   }
 
-  const handleDeclinePress = (index) => {
-    const updatedReasonHas = [...reasonHas]
-    updatedReasonHas[index] = !updatedReasonHas[index]
-    setReasonHas(updatedReasonHas)
+  // The method below is for posting data to the ApI when user Request is Accepted
+  // this method will update on the API by adding a variable called 'status' making its value 'Accepted'
+  const Accepted = async () => {
+
+  }
+
+  // The method below is for posting data to the ApI when user Request is Rejected and imported the reason of rejection
+  // this method will update on the API by adding a variable called 'status' making its value 'Rejected' and there is a reason textinput
+  // you can assign in variable what ever you want
+  const Declined = async () => {
+
   }
 
   useEffect(() => {
     receivedRequest()
+
   }, []) 
+
+  if (isLoading) {
+    return <View style={{alignItems: 'center', marginVertical: 20}}>
+      <ActivityIndicator size={30} color='green'/>
+      <Text style={{fontSize: 19}}>Loading...</Text>
+    </View>
+  }
 
   return (
     <ScrollView>
       <View style={{ flexDirection: 'column', gap: 30 }}>
+      <View style={{flexDirection: 'row-reverse', justifyContent: 'space-between', marginHorizontal: 20, marginVertical: 20}}>
+            <TouchableOpacity
+                onPress={() => {
+                  setDeclined(false)
+                  setAccepted(!accepted)
+                }}
+                style={{backgroundColor: `rgba(100,130,100,0.5)`, padding: 10, borderRadius: 20}}
+                >
+                  <Text>ACCEPTED</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => {
+                  setAccepted(false)
+                  setDeclined(!declined)
+                }}
+                style={{backgroundColor: `rgba(140,100,100,0.5)`, padding: 10, borderRadius: 20}}
+                >
+                  <Text>REJECTED</Text>
+                </TouchableOpacity>
+            </View>
+            {accepted && (
+            infos.map((item, index) => (
+            item.status == 'Accepted' && (
+              <View style={{marginVertical: 10}}>
+                <Text style={{zIndex: 30, position: 'absolute', backgroundColor: `rgba(100,140,110,0.5)`, padding: 8, borderRadius: 20, alignSelf: 'center', marginBottom: 10}}>{item.status}</Text>
+              <View
+              key={index}
+              style={{
+              alignItems: 'center',
+              flexDirection: 'column',
+              gap: 20,
+              backgroundColor: `rgba(100,150,100,0.3)`,
+              width: '90%',
+              alignSelf: 'center',
+              borderRadius: 20,
+              marginTop: 20,
+              padding: 20
+            }}
+          >
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Name:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.name}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Responsibility:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.responsibility}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Start Date:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.startDate}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>End Date:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.endDate}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Reason:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.reason}</Text>
+            </View>
+            <Text style={{ alignSelf: 'flex-start', marginVertical: 10, fontSize: 12 }}>Sent: {item.when}</Text>
+          </View>
+        </View>
+            )
+          ))
+         )}
+         {declined && (
+          infos.map((item, index) => (
+            item.status == 'Rejected' && (
+              <View>
+                <Text style={{zIndex: 30, position: 'absolute', backgroundColor: `rgba(100,140,110,0.5)`, padding: 8, borderRadius: 20, alignSelf: 'center', marginBottom: 10}}>{item.status}</Text>
+              <View
+              key={index}
+            style={{
+              alignItems: 'center',
+              flexDirection: 'column',
+              gap: 20,
+              backgroundColor: `rgba(100,150,100,0.3)`,
+              width: '90%',
+              alignSelf: 'center',
+              borderRadius: 20,
+              marginTop: 20,
+              padding: 20
+            }}
+          >
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Name:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.name}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Responsibility:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.responsibility}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Start Date:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.startDate}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>End Date:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.endDate}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Reason:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.reason}</Text>
+            </View>
+            <Text style={{ alignSelf: 'flex-start', marginVertical: 10, fontSize: 12 }}>Sent: {item.when}</Text>
+          </View>
+        </View>
+            )
+          ))
+         )}
         {infos.map((item, index) => (
+          item.status == null && (
           <View key={index}>
             <Text 
-            style={{ marginHorizontal: '26%', zIndex: 20, position: 'absolute', backgroundColor: `rgba(120,151,150,1)`, width: 200, height: 40, borderRadius: 30, textAlign: 'center', textAlignVertical: 'center'}}
+            style={{ marginHorizontal: '26%', zIndex: 20, position: 'absolute', backgroundColor: `rgba(170,120,120,0.8)`, width: 200, height: 40, borderRadius: 30, textAlign: 'center', textAlignVertical: 'center', fontFamily: 'serif',color: 'white'}}
             >
               Status: {item.status}
             </Text>
@@ -47,7 +170,7 @@ const AdminMain = () => {
               alignItems: 'center',
               flexDirection: 'column',
               gap: 20,
-              backgroundColor: `rgba(150,120,150,0.3)`,
+              backgroundColor: `rgba(100,150,100,0.3)`,
               width: '90%',
               alignSelf: 'center',
               borderRadius: 20,
@@ -55,27 +178,37 @@ const AdminMain = () => {
               padding: 20
             }}
           >
-            <Text>Name: {item.name}</Text>
-            <Text>Responsibility: {item.responsibility}</Text>
-            <Text>Reason: {item.reason}</Text>
-            <Text>From When: {item.startDate}</Text>
-            <Text>To When: {item.endDate}</Text>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Name:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.name}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Responsibility:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.responsibility}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Start Date:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.startDate}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>End Date:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.endDate}</Text>
+            </View>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <Text style={{fontFamily: 'serif', fontSize: 17, fontWeight: 'bold'}}>Reason:</Text>
+              <Text style={{fontFamily: 'serif', fontSize: 17}}>{item.reason}</Text>
+            </View>
             <Text style={{ alignSelf: 'flex-start', marginVertical: 10, fontSize: 12 }}>Sent: {item.when}</Text>
           </View>
           <View style={{ flexDirection: 'row-reverse', marginHorizontal: 20, marginVertical: 20, justifyContent: 'space-between' }}>
           <TouchableOpacity
-            onPress={async () => {
-              if (keys.length === 0) return; // Ensure there's at least one request
-              const docToUpdate = doc(database, 'Requests', keys[index])
-              await updateDoc(docToUpdate, { status: 'Accepted' })
-              alert('Your acceptance was sent successfully')
-            }}
+            onPress={Accepted}
             style={{ backgroundColor: `rgba(120, 200,150, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}
           >
             <Text>Accept</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleDeclinePress(index)}
+            onPress={() => setReasonHas(!reasonHas)}
             style={{ backgroundColor: `rgba(200, 120,120, 0.5)`, width: 150, alignItems: 'center', height: 50, justifyContent: 'center', borderRadius: 30 }}
           >
             <Text>Decline</Text>
@@ -93,16 +226,7 @@ const AdminMain = () => {
               style={{ backgroundColor: `rgba(120,130,120,0.5)`, width: '70%', borderRadius: 30, height: 100, paddingHorizontal: 10 }}
             />
             <TouchableOpacity
-              onPress={async () => {
-                if (keys.length === 0) return; // Ensure there's at least one request
-                const docToUpdate = doc(database, 'Requests', keys[index])
-                await updateDoc(docToUpdate, { 
-                  status: 'Rejected',
-                  info: { reason}
-                 })
-                alert('Your rejection was sent successfully')
-                handleDeclinePress(index)
-              }}
+              onPress={Declined}
               style={{ backgroundColor: `rgba(150,120,120,0.5)`, alignSelf: 'flex-end', marginHorizontal: 20, width: 150, borderRadius: 20, height: 50, alignItems: 'center', justifyContent: 'center' }}
             >
               <Text>Submit</Text>
@@ -110,9 +234,10 @@ const AdminMain = () => {
           </View>  
         )}
         </View>
+          )
         ))}
       </View>
-      
+         
     </ScrollView>
   )
 }

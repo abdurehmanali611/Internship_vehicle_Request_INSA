@@ -39,50 +39,53 @@ const TransportLogin = ({navigation}) => {
         onPress={userCheck}
         style={styles.touch}
         >
-          <Text>Login</Text>
+          <Text style={{fontSize: 20, fontFamily: 'serif'}}>Login</Text>
         </TouchableOpacity>
     </View>
   )
 }
 
 const styles = StyleSheet.create ({
-    header: {
-      fontSize: 25,
-      textAlign: 'center',
-      marginTop: '25%',
-      backgroundColor: `rgba(200,180,170,0.5)`,
-      width: '50%',
-      alignSelf: 'center',
-      height: '20%',
-      textAlignVertical: 'center',
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      marginVertical: 13
-    },
-    family: {
-      marginHorizontal: 18,
-      marginVertical: 20
-    },
-    sontxt: {
-      fontSize: 18
-    },
-    soninput: {
-      backgroundColor: `rgba(100,10,50,0.5)`,
-      height: 60,
-      borderRadius: 20,
-      paddingLeft: 20,
-      marginLeft: 10
-    },
-    touch: {
-    backgroundColor: `rgba(100,10,150,0.5)`,
+  header: {
+    fontSize: 25,
+    textAlign: 'center',
+    marginTop: '25%',
+    backgroundColor: `rgba(160,180,170,0.3)`,
+    width: '50%',
+    alignSelf: 'center',
+    height: '15%',
+    textAlignVertical: 'center',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginVertical: 13,
+    fontFamily: 'serif'
+  },
+  family: {
+    marginHorizontal: 18,
+    marginVertical: 20,
+    flexDirection: 'column',
+    gap: 20
+  },
+  sontxt: {
+    fontSize: 18
+  },
+  soninput: {
+    backgroundColor: `rgba(110,110,110,0.15)`,
     height: 60,
     borderRadius: 20,
-    width: 150,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    marginVertical: 15
-    }
+    paddingLeft: 20,
+    marginLeft: 10
+  },
+  touch: {
+  backgroundColor: `rgba(110,130,130,0.5)`,
+  height: 60,
+  borderRadius: 20,
+  width: 150,
+  alignItems: 'center',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  marginVertical: 15
+  }
 })
 
 export default TransportLogin

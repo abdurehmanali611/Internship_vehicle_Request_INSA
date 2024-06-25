@@ -1,8 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Calendar } from 'react-native-calendars'
-import { database } from '../config/firebase'
-import { addDoc, collection } from 'firebase/firestore'
 
 const UserMain = () => {
 
@@ -13,11 +11,10 @@ const UserMain = () => {
   const [reason, setReason] = useState('')
   const [fromseeCalender, setFromSeeCalender] = useState(false)
   const [toseeCalender, setToSeeCalender] = useState(false)
+  // The above two state variables are to make the calender in start and End date be seen or not
   const [email, setEmail] = useState('')
 
   const date = new Date()
-
-  const collectionRef = collection(database, 'Requests')
 
   const requestinfo = {
     name: name,
@@ -29,15 +26,9 @@ const UserMain = () => {
     when: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} - ${date.getHours()}: ${date.getMinutes()}`
   }
 
+  // The below method is used to post the user request to the API and the data that will be posted is the above requestinfo array you can use it directly or replace it but
+  // It is better to not change the name or variable of the values like name, Email... because it make you to change it AdminMain, TransportMain ... 
   const sendRequest = async () => { 
-
-    if(name.length == 0 || responsibility.length == 0 || email.length == 0 || email.includes('@') == false || startDate.length == 0 || endDate.length == 0 || reason.length == 0 ){
-      alert('Please fill all the fields')
-    }else {
-       await addDoc(collectionRef, requestinfo)
-       .catch(err => console.log(err))
-       alert('successfully sent look after your Email')
-    }
     
   }
 
@@ -57,17 +48,17 @@ const UserMain = () => {
         <Text style = {styles.questiontxt}>Email: </Text>
         <TextInput 
         style = {styles.questioninput}
-        placeholder='Email Address'
+        placeholder='email'
         textContentType='emailAddress'
         value={email}
         onChangeText={(newemail) => setEmail(newemail)}
         />
       </View>
       <View style= {styles.questionfamily}>
-        <Text style = {styles.questiontxt}>Your responsibility: </Text>
+        <Text style = {styles.questiontxt}>Responsibility: </Text>
         <TextInput 
         style = {styles.questioninput}
-        placeholder='Your responsibility'
+        placeholder='responsibility'
         textContentType='jobTitle'
         value={responsibility}
         onChangeText={(newresponsibility) => setResponsibility(newresponsibility)}
@@ -79,7 +70,7 @@ const UserMain = () => {
           <View style={{flexDirection: 'row', width: 300}}>
           <TextInput 
           style = {[styles.questioninput, {width: 260}]}
-          placeholder='Date and Time'
+          placeholder='From when'
           textContentType='birthdate'
           value={startDate}
           onChangeText={(newstart) => setStartDate(newstart)}
@@ -114,7 +105,7 @@ const UserMain = () => {
           <View style={{flexDirection: 'row', width: 300}}>
           <TextInput 
           style = {[styles.questioninput, {width: 260}]}
-          placeholder='Date and Time'
+          placeholder='To when'
           textContentType='birthdate'
           value={endDate}
           onChangeText={(newend) => setEndDate(newend)}
@@ -147,7 +138,7 @@ const UserMain = () => {
         <Text style = {styles.questiontxt}>Reason: </Text>
         <TextInput
         style = {styles.questioninput} 
-        placeholder='Why you want it'
+        placeholder='Why'
         textContentType='none'
         value={reason}
         onChangeText={(newreason) => setReason(newreason)}
@@ -163,15 +154,16 @@ const UserMain = () => {
           setEndDate('')
           setStartDate('')
         }}
-        style = {styles.touch}
+        // This touchableOpacity is to reset the datas in textinputs to ''
+        style = {styles.reject}
         >
-          <Text>Reset</Text>
+          <Text style={{fontFamily: 'serif', fontSize: 19}}>Reset</Text>
         </TouchableOpacity>
         <TouchableOpacity
         onPress={sendRequest}
         style = {styles.touch}
         >
-          <Text>Send</Text>
+          <Text style={{fontFamily: 'serif', fontSize: 19}}>Send</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -192,19 +184,22 @@ const styles = StyleSheet.create ({
       },
       questionfamily: {
         marginHorizontal: 15,
-        marginVertical: 10
+        marginVertical: 10,
+        flexDirection: 'column',
+        gap: 10
       },
       questiontxt: {
         fontSize: 16,
-        marginVertical: 10
+        marginVertical: 10,
+        fontFamily: 'serif'
       },
       questioninput: {
-        backgroundColor: '#90D26D',
+        backgroundColor: `rgba(110,120,110,0.2)`,
         height: 60,
         marginLeft: 13,
         paddingLeft: 20,
         borderRadius: 30,
-        color: 'white',
+        color: 'black',
         width: 310
       },
       touchfamily: {
@@ -214,7 +209,15 @@ const styles = StyleSheet.create ({
         marginVertical: 20
       },
       touch: {
-        backgroundColor: `rgba(100,123,150,0.5)`,
+        backgroundColor: `rgba(100,150,110,0.8)`,
+        width: 130,
+        height: 50,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      reject: {
+        backgroundColor: `rgba(180,110,110,0.8)`,
         width: 130,
         height: 50,
         borderRadius: 30,

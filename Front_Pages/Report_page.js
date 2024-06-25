@@ -1,77 +1,139 @@
-import { View, Text } from 'react-native'
-import React, {useEffect, useState} from 'react'
-import { collection, getDocs } from 'firebase/firestore'
-import { database } from '../config/firebase'
-import { ActivityIndicator } from 'react-native'
+import { View, ActivityIndicator, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import MapView, { Circle, Marker } from 'react-native-maps'
+import { Text } from 'react-native'
+import { Image } from 'react-native'
 
 const Report_page = () => {
 
-    const [infos, setinfos] = useState([])
-    const [keys, setKeys] = useState([])
-    const [info2, setInfo2] = useState([])
-    const [key2, setKey2] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
-    
-    const collectionRef = collection(database, 'Car Informations')
-    const collectionRef2 = collection(database, 'Requests')
+  const [isLoading, setIsLoading] = useState(true)
+  const [data, setData] = useState([])
+  const [trueAll, setTrueAll] = useState(false)
 
-    const gettingData = async () => {
-        const response = await getDocs(collectionRef)
-        const data = response.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }))
 
-        setinfos(data)
-        setKeys(data.map(item => item.id))
+  const gettingData = async () => {
+      await fetch('http://172.20.0.222:81/IFMS_Pro/API/VehicleTrackingApi')
+      .then((response) => response.json())
+      .then((data) => JSON.stringify(data))
+      .then((parsed) => JSON.parse(parsed))
+      .then((stringified) => setData(stringified))
 
-        const response2 = await getDocs(collectionRef2)
-        const data2 = response2.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-          setInfo2(data2)
-          setKey2(data2.map(item => item.id))
-          
-        setIsLoading(false)
-    }
 
-    useEffect(() => {
-        gettingData()
-    }, [])
+      setIsLoading(false)
 
-    if (isLoading) {
-        return <View style={{alignSelf: 'center', alignItems: 'center', marginVertical: 10}}>
-          <ActivityIndicator size={40} />
-          <Text>Loading...</Text>
-        </View>
-    }
+  }
+
+  useEffect(() => {
+    gettingData()
+  })
 
   return (
     <View>
-      <Text style = {{textAlign: 'center', marginVertical: 10, fontSize: 20}}>Cars</Text>
-      {infos.map((info, index) => (
-            <View key={index}>
-            <Text style={{zIndex: 10, position: 'absolute', alignSelf: 'center', backgroundColor: `rgba(120,130,150,0.4)`, width: 120, height: 40, textAlign: 'center', textAlignVertical: 'center', borderRadius: 20}}>{info.isAssigned ? 'Assigned': 'Free'}</Text>
-              <View 
-              style={{alignSelf: 'center', marginVertical: 20, backgroundColor: `rgba(200,182,190,0.4)`, width: 330, padding: 20, borderRadius: 20}}
-              >
-                <View style={{flexDirection: 'row', gap: 20}}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>Driver Name: </Text>
-                  <Text style={{fontSize: 17}}>{info.DriverName}</Text>
-                </View>
-                <View style={{flexDirection: 'row', gap: 20}}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>Car Name: </Text>
-                  <Text style={{fontSize: 17}}>{info.carName}</Text>
-                </View>
-                <View style={{flexDirection: 'row', gap: 20}}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>Plate Number: </Text>
-                  <Text style={{fontSize: 17}}>{info.PlateNumber}</Text>
-                </View>  
-              </View> 
-              </View>         
-      ))}
+    <View>
+      {data.length == 0 ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        data.map((item, index) => (
+          <View key={index}
+          style={{}}
+          >
+            <MapView
+            style={{width: '100%', height: '45%'}}
+            region={{
+              latitude: item.latitude,
+              longitude: item.longitude,
+              latitudeDelta: 3,
+              longitudeDelta: 3,
+            }}
+            showsUserLocation = {true}
+            >
+              <Marker 
+              coordinate={{latitude: item.latitude, longitude: item.longitude}}
+              title={item.placeName}
+              />
+              <Circle 
+              center={{
+                latitude: item.latitude,
+                longitude: item.longitude
+              }}
+              radius={500}
+              strokeWidth={3}
+              strokeColor='#4343AD'
+              fillColor='#FFAD23'
+              />
+            </MapView>
+          </View>
+        ))
+      )}
     </View>
+        {trueAll ? (
+          <View style={{zIndex: 30, position: 'absolute'}}>
+            <TouchableOpacity
+            style={{alignSelf: 'flex-end', marginVertical: 10, marginHorizontal: 10}}
+            onPress={() => setTrueAll(!trueAll)}
+            >
+              <Image 
+              source={require('../assets/close.png')}
+              alt='close'
+              style={{width: 50, height: 50, borderRadius: 20}}
+              />
+            </TouchableOpacity>
+            <View style={{marginHorizontal: 8}}>
+            <View style={{flexDirection: 'row', gap: 10, marginVertical: 10}}>
+            <View style={{paddingHorizontal: 10, backgroundColor: `rgba(150,110,110,0.5)`, borderRadius: 20}}>
+                <Text style={{fontFamily: 'serif', fontWeight: '700', textDecorationLine: 'underline'}}>Vehicle Id</Text>
+                {data.map((item, index) => (
+                  <Text 
+                  style={{textAlign: 'center', marginVertical: 10, fontWeight: '700', fontSize: 16}}
+                  key={index}>{item.vehicle.vehicleId}</Text>
+                ))}
+              </View>
+              <View style={{paddingHorizontal: 10, backgroundColor: `rgba(150,110,110,0.5)`, borderRadius: 20}}>
+                <Text style={{fontFamily: 'serif', fontWeight: '700', textDecorationLine: 'underline'}}>Latitude</Text>
+                {data.map((item, index) => (
+                  <Text 
+                  style={{textAlign: 'center', marginVertical: 10, fontWeight: '700', fontSize: 16}}
+                  key={index}>{item.latitude}</Text>
+                ))}
+              </View>
+              <View style={{paddingHorizontal: 10, backgroundColor: `rgba(150,110,110,0.5)`, borderRadius: 20}}>
+                <Text style={{fontFamily: 'serif', fontWeight: '700', textDecorationLine: 'underline'}}>Longitude</Text>
+                {data.map((item, index) => (
+                  <Text 
+                  style={{textAlign: 'center', marginVertical: 10, fontWeight: '700', fontSize: 16}}
+                  key={index}>{item.longitude}</Text>
+                ))}
+              </View>
+            </View>
+             <View style={{flexDirection: 'row', gap: 4}}>
+             <View style={{paddingHorizontal: 10, backgroundColor: `rgba(150,110,110,0.5)`, borderRadius: 20}}>
+                <Text style={{fontFamily: 'serif', fontWeight: '700', textDecorationLine: 'underline'}}>PlaceName</Text>
+                {data.map((item, index) => (
+                  <Text 
+                  style={{textAlign: 'center', marginVertical: 10, fontWeight: '700', fontSize: 16}}
+                  key={index}>{item.placeName}</Text>
+                ))}
+              </View>
+              <View style={{paddingHorizontal: 4, backgroundColor: `rgba(150,110,110,0.5)`, borderRadius: 20}}>
+                <Text style={{fontFamily: 'serif', fontWeight: '700', textDecorationLine: 'underline'}}>Date of Info</Text>
+                {data.map((item, index) => (
+                  <Text 
+                  style={{textAlign: 'center', marginVertical: 10, fontWeight: '700', fontSize: 16}}
+                  key={index}>{item.date}</Text>
+                ))}
+              </View>
+             </View>
+            </View>
+          </View>
+        ): (
+            <TouchableOpacity
+        style={{zIndex: 30, position: 'absolute', alignSelf: 'flex-end', backgroundColor: `rgba(110,170,110,1)`, padding: 20, marginVertical: 10, marginRight: 35, borderRadius: 20}}
+        onPress={() => setTrueAll(!trueAll)}
+        >
+          <Text>Show All</Text>
+        </TouchableOpacity>
+        )}
+  </View>
   )
 }
 
