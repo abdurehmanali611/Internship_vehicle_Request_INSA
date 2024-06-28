@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import MapView, { Circle, Marker } from 'react-native-maps'
 import { Text } from 'react-native'
 import { Image } from 'react-native'
+import { EXPO_API_URL } from "@env"
 
 const Report_page = () => {
 
@@ -12,7 +13,7 @@ const Report_page = () => {
 
 
   const gettingData = async () => {
-      await fetch('http://172.20.0.222:81/IFMS_Pro/API/VehicleTrackingApi')
+      await fetch(`${EXPO_API_URL}`)
       .then((response) => response.json())
       .then((data) => JSON.stringify(data))
       .then((parsed) => JSON.parse(parsed))
